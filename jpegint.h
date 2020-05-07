@@ -330,6 +330,18 @@ struct jpeg_upsampler {
   boolean need_context_rows;    /* TRUE if need rows above & below */
 };
 
+/* Upsampler arguments for the upsampling functions. */
+struct jpeg_upsampler_args {
+  int num_components;
+  int max_v_samp_factor;
+  J_COLOR_SPACE out_color_space;
+  JSAMPLE *sample_range_limit;
+  JDIMENSION output_scanline;
+
+  /* FIXME: why does only mips/jsimd.c require this? */
+  struct jpeg_upsampler *upsample;
+};
+
 /* Colorspace conversion */
 struct jpeg_color_deconverter_input {
   int num_components;
@@ -433,6 +445,8 @@ EXTERN(void)
 jpeg_mem_dest_internal (j_compress_ptr cinfo,
                unsigned char **outbuffer, unsigned long *outsize, int pool_id);
 #endif
+
+EXTERN(struct jpeg_upsampler_args) jupsampler_args_from_cinfo(j_decompress_ptr cinfo);
 
 /* Utility routines in jutils.c */
 EXTERN(long) jdiv_round_up (long a, long b);
